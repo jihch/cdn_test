@@ -6,9 +6,9 @@ import java.io.InputStream;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 
 public class ImageDownload {
 
@@ -19,12 +19,11 @@ public class ImageDownload {
 	}
 
 	public static String download(String url, String filepath) {
+		HttpGet httpget = new HttpGet(url);
+		httpget.setHeader("Host", "iguagua.net");
+		CloseableHttpClient httpclient = HttpClients.createDefault();
 		try {
-			HttpClient client = new DefaultHttpClient();
-			HttpGet httpget = new HttpGet(url);
-			httpget.setHeader("Host", "iguagua.net");
-			HttpResponse response = client.execute(httpget);
-
+			HttpResponse response = httpclient.execute(httpget);
 			HttpEntity entity = response.getEntity();
 			InputStream is = entity.getContent();
 			File file = new File(filepath);
